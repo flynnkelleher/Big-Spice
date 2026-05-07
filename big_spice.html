@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big Spice</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;background:#fff;color:#1a1a1a;padding:20px;max-width:600px;margin:0 auto}
+h1{font-size:22px;font-weight:600;margin-bottom:2px}h1 span{color:#BA7517}
+.sub{font-size:13px;color:#666;margin-bottom:16px}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.topright{display:flex;gap:8px;align-items:center}
+.saved{font-size:11px;color:#888}
+.btn-sm{font-size:12px;padding:3px 10px;border-radius:99px;border:1px solid #ddd;background:#fff;color:#666;cursor:pointer}
+.btn-sm:hover{background:#fee;color:#c00;border-color:#fbb}
+.scan-bar{display:flex;align-items:center;justify-content:space-between;background:#f7f7f7;border:1px solid #e5e5e5;border-radius:10px;padding:10px 14px;margin-bottom:18px}
+.scan-bar-text p{font-size:13px;font-weight:600;color:#111}
+.scan-bar-text span{font-size:12px;color:#888}
+.scan-btns{display:flex;gap:8px}
+.sbtn{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:6px 12px;border-radius:99px;cursor:pointer;border:1px solid}
+.sbtn-bc{background:#faeeda;border-color:#fac775;color:#633806}
+.sbtn-bc:hover{background:#fac775}
+.sbtn-ph{background:#fff;border-color:#ccc;color:#666}
+.sbtn-ph:hover{background:#f5f5f5}
+.sec{margin-bottom:16px}
+.sec-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.hint{font-size:12px;color:#999;margin-bottom:6px}
+.irow{display:flex;gap:6px;margin-bottom:8px}
+.irow input{flex:1;padding:6px 10px;border:1px solid #ddd;border-radius:6px;font-size:13px}
+.irow select{padding:6px 8px;border:1px solid #ddd;border-radius:6px;font-size:12px}
+.irow button{padding:6px 12px;border:1px solid #ddd;border-radius:6px;background:#fff;font-size:12px;cursor:pointer;white-space:nowrap}
+.irow button:hover{background:#f5f5f5}
+.tags{display:flex;flex-wrap:wrap;gap:5px;min-height:24px;align-items:center}
+.tag{display:flex;align-items:center;gap:4px;border-radius:99px;padding:3px 8px 3px 10px;font-size:12px}
+.ti{background:#f0f0f0;border:1px solid #ddd;color:#333}
+.ts{background:#faeeda;border:1px solid #fac775;color:#633806}
+.to{background:#eaf3de;border:1px solid #c0dd97;color:#27500a}
+.tsa{background:#eeedfe;border:1px solid #afa9ec;color:#3c3489}
+.tp{background:#e1f5ee;border:1px solid #9fe1cb;color:#085041}
+.ta{background:#e6f1fb;border:1px solid #85b7eb;color:#185fa5}
+.tag button{background:none;border:none;cursor:pointer;color:inherit;opacity:.5;font-size:13px;line-height:1;padding:0;display:flex;align-items:center}
+.tag button:hover{opacity:1}
+.chip-shelf{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.chip{font-size:12px;padding:3px 10px;border-radius:99px;cursor:pointer;border:1px solid}
+.csp{border-color:#fac775;background:transparent;color:#854f0b}.csp:hover,.csp.on{background:#faeeda}
+.coi{border-color:#c0dd97;background:transparent;color:#3b6d11}.coi:hover,.coi.on{background:#eaf3de}
+.csa{border-color:#afa9ec;background:transparent;color:#534ab7}.csa:hover,.csa.on{background:#eeedfe}
+.cpa{border-color:#9fe1cb;background:transparent;color:#0f6e56}.cpa:hover,.cpa.on{background:#e1f5ee}
+.chip.on{font-weight:600}
+
+/* Perishables subcategories */
+.per-sub{margin-bottom:12px}
+.per-sub-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#a32d2d;margin-bottom:5px;padding:3px 0;border-bottom:1px solid #f7c1c1}
+.per-list{display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
+.per-item{display:flex;align-items:center;gap:8px;background:#fcebeb;border:1px solid #f7c1c1;border-radius:8px;padding:6px 10px}
+.per-name{flex:1;font-size:13px;color:#501313;font-weight:600}
+.per-badge{font-size:11px;padding:2px 7px;border-radius:99px;white-space:nowrap}
+.ut{background:#e24b4a;color:#fff}.us{background:#f09595;color:#501313}.uw{background:#f7c1c1;color:#791f1f}
+.per-rm{background:none;border:none;cursor:pointer;color:#a32d2d;opacity:.6;display:flex;align-items:center}
+
+.divider{border:none;border-top:1px solid #eee;margin:14px 0}
+.app-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:8px}
+.app-tog{display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#666;font-size:13px;cursor:pointer}
+.app-tog.on{background:#e6f1fb;border-color:#85b7eb;color:#185fa5;font-weight:600}
+.app-tog.off{background:#fcebeb;border-color:#f7c1c1;color:#a32d2d;text-decoration:line-through;opacity:.7}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.opt label{font-size:12px;color:#888;display:block;margin-bottom:4px}
+.opt select{width:100%;padding:6px 8px;border:1px solid #ddd;border-radius:6px;font-size:13px}
+.sr-wrap{margin-bottom:14px}
+.sr-label{font-size:12px;color:#888;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.sr-btns{display:flex;gap:7px}
+.sr-btn{flex:1;padding:7px 4px;font-size:12px;font-weight:600;border-radius:7px;border:1px solid #ddd;background:#fff;color:#888;cursor:pointer;text-align:center}
+.sr-btn:hover{background:#f5f5f5}
+.sr-btn.on{background:#e6f1fb;border-color:#85b7eb;color:#185fa5}
+.find-btn{width:100%;padding:10px;font-size:15px;font-weight:600;border:1px solid #ddd;border-radius:8px;background:#fff;color:#111;cursor:pointer}
+.find-btn:hover{background:#f5f5f5}
+.find-btn:active{transform:scale(.98)}
+.results{margin-top:16px}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:14px;margin-bottom:10px}
+.card.perish{border-color:#f09595}
+.pb{font-size:11px;color:#791f1f;background:#fcebeb;border-radius:99px;padding:2px 8px;display:inline-block;margin-bottom:4px}
+.ctag{font-size:12px;color:#854f0b;background:#faeeda;border-radius:99px;padding:2px 8px;display:inline-block;margin-bottom:5px}
+.card h3{font-size:15px;font-weight:600;margin-bottom:2px}
+.card-meta{font-size:12px;color:#888;margin-bottom:7px}
+.card-desc{font-size:13px;line-height:1.6;margin-bottom:8px}
+.badges{display:flex;flex-wrap:wrap;gap:4px}
+.b{font-size:11px;padding:2px 8px;border-radius:99px}
+.bi{background:#f0f0f0;color:#555}
+.bsp{background:#faeeda;color:#633806}
+.bsa{background:#eeedfe;color:#3c3489}
+.bo{background:#eaf3de;color:#27500a}
+.bp{background:#e1f5ee;color:#085041}
+.bpe{background:#fcebeb;color:#791f1f}
+.bap{background:#e6f1fb;color:#185fa5}
+.bgr{background:#378add;color:#fff;font-weight:600}
+.grab-sec{margin-top:8px;padding-top:8px;border-top:1px solid #eee}
+.grab-lbl{font-size:12px;color:#185fa5;font-weight:600;margin-bottom:5px}
+.empty{text-align:center;padding:2rem 1rem;color:#999;font-size:14px}
+.loading{text-align:center;padding:2rem;color:#999;font-size:14px}
+.dots::after{content:'';animation:d 1.2s steps(4,end) infinite}
+@keyframes d{0%,100%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+.err{color:#a32d2d;font-size:13px;padding:1rem;text-align:center}
+.no-per{font-size:12px;color:#999;font-style:italic}
+.modal-back{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center;padding:16px}
+.modal-back.open{display:flex}
+.modal{background:#fff;border-radius:12px;padding:20px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.modal-head h2{font-size:17px;font-weight:600}
+.modal-close{background:none;border:none;cursor:pointer;font-size:20px;color:#888}
+.tabs{display:flex;border:1px solid #ddd;border-radius:8px;overflow:hidden;margin-bottom:12px}
+.tab{flex:1;padding:8px;font-size:13px;font-weight:600;border:none;background:transparent;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px}
+.tab.on{background:#faeeda;color:#633806}
+.tab:not(:last-child){border-right:1px solid #ddd}
+.notice{background:#eaf3de;border:1px solid #c0dd97;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:#27500a;display:flex;gap:7px}
+.vwrap{position:relative;border-radius:8px;overflow:hidden;background:#000;margin-bottom:8px}
+.vwrap video{width:100%;display:block;max-height:200px;object-fit:cover}
+.scanline{position:absolute;left:10%;right:10%;top:50%;height:2px;background:#BA7517;animation:sl 2s ease-in-out infinite}
+@keyframes sl{0%,100%{top:30%}50%{top:70%}}
+.upzone{border:2px dashed #ccc;border-radius:10px;padding:2rem 1rem;text-align:center;cursor:pointer;margin-bottom:12px}
+.upzone:hover{background:#f9f9f9}
+.upzone .ico{font-size:32px;color:#aaa}
+.upzone p{font-size:13px;color:#888;margin-top:6px}
+.prev-img{width:100%;border-radius:8px;margin-bottom:12px;max-height:180px;object-fit:cover}
+.scan-items{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.si{display:flex;align-items:center;gap:5px;border-radius:99px;padding:4px 10px;font-size:12px;cursor:pointer;border:1px solid transparent;user-select:none}
+.si.ck{opacity:1}.si.uc{opacity:.35}
+.si-pe{background:#fcebeb;border-color:#f7c1c1;color:#791f1f}
+.si-in{background:#f0f0f0;border-color:#ddd;color:#333}
+.si-sp{background:#faeeda;border-color:#fac775;color:#633806}
+.si-oi{background:#eaf3de;border-color:#c0dd97;color:#27500a}
+.si-sa{background:#eeedfe;border-color:#afa9ec;color:#3c3489}
+.si-pa{background:#e1f5ee;border-color:#9fe1cb;color:#085041}
+.sc-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#888;margin-bottom:5px;margin-top:8px}
+.mact{display:flex;gap:8px;margin-top:12px}
+.mact button{flex:1;padding:8px;font-size:13px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer}
+.mact .ok{background:#faeeda;border-color:#fac775;color:#633806;font-weight:600}
+.mact .ok:hover{background:#fac775}
+.more-btn{width:100%;margin-top:6px;padding:7px;font-size:12px;border-radius:7px;border:1px solid #c0dd97;background:transparent;color:#3b6d11;cursor:pointer}
+.more-btn:hover{background:#eaf3de}
+.sc-load{text-align:center;padding:1.5rem;color:#999;font-size:13px}
+
+/* ── ANIMATIONS ── */
+@keyframes slideIn{from{opacity:0;transform:translateY(-8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes slideOut{from{opacity:1;transform:translateY(0) scale(1);max-height:60px;margin-bottom:5px}to{opacity:0;transform:translateY(-6px) scale(.97);max-height:0;margin-bottom:0;padding-top:0;padding-bottom:0}}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes btnPulse{0%,100%{box-shadow:0 0 0 0 rgba(186,117,23,.4)}50%{box-shadow:0 0 0 7px rgba(186,117,23,0)}}
+
+.per-item{animation:slideIn .22s ease both}
+.per-item.removing{animation:slideOut .2s ease forwards;overflow:hidden;pointer-events:none}
+.card{animation:cardIn .3s ease both}
+.find-btn.loading{animation:btnPulse 1.2s ease infinite;border-color:#fac775;color:#633806;background:#faeeda}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>🔥 Big <span>Spice</span></h1>
+    <div class="sub">The spices you have define the cuisine you can make.</div>
+  </div>
+  <div class="topright">
+    <span class="saved" id="sv">💾 Pantry saved</span>
+    <button class="btn-sm" id="clear-btn">🗑 Clear</button>
+  </div>
+</div>
+
+<div class="scan-bar">
+  <div class="scan-bar-text"><p>Add items to your pantry</p><span>Barcode is most accurate — use photo if no barcode</span></div>
+  <div class="scan-btns">
+    <button class="sbtn sbtn-bc" id="bc-btn">📊 Barcode</button>
+    <button class="sbtn sbtn-ph" id="ph-btn">📷 Photo</button>
+  </div>
+</div>
+
+<!-- PERISHABLES -->
+<div class="sec">
+  <div class="sec-label">⚠️ Perishables — use first</div>
+  <div class="hint">Prioritized in suggestions. Not saved between sessions.</div>
+
+  <!-- 1. Proteins -->
+  <div class="per-sub">
+    <div class="per-sub-label">🥩 1. Proteins</div>
+    <div class="per-list" id="per-list-proteins"><p class="no-per">None added</p></div>
+    <div class="irow">
+      <input id="per-inp-proteins" placeholder="e.g. chicken, ground beef, salmon..." />
+      <select class="per-urg-sel"><option value="today">Use today</option><option value="soon" selected>Use soon</option><option value="week">This week</option></select>
+      <button class="per-add-btn" data-cat="proteins">+ Add</button>
+    </div>
+  </div>
+
+  <!-- 2. Veggies -->
+  <div class="per-sub">
+    <div class="per-sub-label">🥦 2. Veggies</div>
+    <div class="per-list" id="per-list-veggies"><p class="no-per">None added</p></div>
+    <div class="irow">
+      <input id="per-inp-veggies" placeholder="e.g. spinach, broccoli, bell pepper..." />
+      <select class="per-urg-sel"><option value="today">Use today</option><option value="soon" selected>Use soon</option><option value="week">This week</option></select>
+      <button class="per-add-btn" data-cat="veggies">+ Add</button>
+    </div>
+  </div>
+
+  <!-- 3. Fruits -->
+  <div class="per-sub">
+    <div class="per-sub-label">🍎 3. Fruits</div>
+    <div class="per-list" id="per-list-fruits"><p class="no-per">None added</p></div>
+    <div class="irow">
+      <input id="per-inp-fruits" placeholder="e.g. strawberries, banana, mango..." />
+      <select class="per-urg-sel"><option value="today">Use today</option><option value="soon" selected>Use soon</option><option value="week">This week</option></select>
+      <button class="per-add-btn" data-cat="fruits">+ Add</button>
+    </div>
+  </div>
+
+  <!-- 4. Eggs & Dairy -->
+  <div class="per-sub">
+    <div class="per-sub-label">🥚 4. Eggs &amp; Dairy</div>
+    <div class="per-list" id="per-list-eggs-dairy"><p class="no-per">None added</p></div>
+    <div class="irow">
+      <input id="per-inp-eggs-dairy" placeholder="e.g. eggs, milk, cheddar, yogurt..." />
+      <select class="per-urg-sel"><option value="today">Use today</option><option value="soon" selected>Use soon</option><option value="week">This week</option></select>
+      <button class="per-add-btn" data-cat="eggs-dairy">+ Add</button>
+    </div>
+  </div>
+
+  <!-- 5. Carbs -->
+  <div class="per-sub">
+    <div class="per-sub-label">🍞 5. Carbs</div>
+    <div class="per-list" id="per-list-carbs"><p class="no-per">None added</p></div>
+    <div class="irow">
+      <input id="per-inp-carbs" placeholder="e.g. bread, tortillas, fresh pasta..." />
+      <select class="per-urg-sel"><option value="today">Use today</option><option value="soon" selected>Use soon</option><option value="week">This week</option></select>
+      <button class="per-add-btn" data-cat="carbs">+ Add</button>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- PANTRY -->
+<div class="sec">
+  <div class="sec-label">📦 Pantry staples</div>
+  <div class="chip-shelf" id="pan-shelf"></div>
+  <div class="irow"><input id="pan-inp" placeholder="Add another staple..." /><button id="pan-add">+ Add</button></div>
+  <div class="tags" id="pan-tags"><span style="font-size:12px;color:#999">Tap above or add your own</span></div>
+</div>
+<hr class="divider">
+
+<!-- SPICES -->
+<div class="sec">
+  <div class="sec-label">🌶 Spice rack</div>
+  <div class="chip-shelf" id="sp-shelf"></div>
+  <div class="irow"><input id="sp-inp" placeholder="Add another spice..." /><button id="sp-add">+ Add</button></div>
+  <div class="tags" id="sp-tags"><span style="font-size:12px;color:#999">Tap above or add your own</span></div>
+</div>
+<hr class="divider">
+
+<!-- SAUCES -->
+<div class="sec">
+  <div class="sec-label">🥣 Sauces &amp; condiments</div>
+  <div class="chip-shelf" id="sa-shelf"></div>
+  <div class="irow"><input id="sa-inp" placeholder="Add another sauce..." /><button id="sa-add">+ Add</button></div>
+  <div class="tags" id="sa-tags"><span style="font-size:12px;color:#999">Tap above or add your own</span></div>
+</div>
+<hr class="divider">
+
+<!-- OILS -->
+<div class="sec">
+  <div class="sec-label">🫙 Cooking oils &amp; fats</div>
+  <div class="chip-shelf" id="oi-shelf"></div>
+  <div class="irow"><input id="oi-inp" placeholder="Add another oil or fat..." /><button id="oi-add">+ Add</button></div>
+  <div class="tags" id="oi-tags"><span style="font-size:12px;color:#999">Tap above or add your own</span></div>
+</div>
+<hr class="divider">
+
+<!-- APPLIANCES -->
+<div class="sec">
+  <div class="sec-label">🔌 Appliances</div>
+  <div class="hint">Stovetop &amp; oven assumed — tap to toggle off. Add special appliances below (Vitamix unlocks soups, air fryer unlocks crispy dishes, etc.)</div>
+  <div class="app-grid" id="app-grid"></div>
+  <div class="irow"><input id="app-inp" placeholder="e.g. Vitamix, air fryer, instant pot, wok..." /><button id="app-add">+ Add</button></div>
+  <div class="tags" id="app-tags"><span style="font-size:12px;color:#999">No extra appliances yet</span></div>
+</div>
+<hr class="divider">
+
+<!-- OPTIONS -->
+<div class="opts">
+  <div class="opt"><label>Meal type</label><select id="meal-type"><option value="any">Any</option><option value="breakfast">Breakfast</option><option value="lunch">Lunch</option><option value="dinner">Dinner</option><option value="snack">Snack</option><option value="dessert">Dessert</option></select></div>
+  <div class="opt"><label>Diet</label><select id="diet"><option value="none">No restriction</option><option value="vegetarian">Vegetarian</option><option value="vegan">Vegan</option><option value="gluten-free">Gluten-free</option><option value="low-carb">Low-carb</option></select></div>
+</div>
+
+<!-- STORE RUN -->
+<div class="sr-wrap">
+  <div class="sr-label">🛒 At the store? Show recipes within this many extra items:</div>
+  <div class="sr-btns">
+    <button class="sr-btn on" data-v="0">What I have</button>
+    <button class="sr-btn" data-v="1">+ 1 item</button>
+    <button class="sr-btn" data-v="2">+ 2 items</button>
+    <button class="sr-btn" data-v="3">+ 3 items</button>
+  </div>
+</div>
+
+<button class="find-btn" id="find-btn">✨ Find my meals</button>
+<div class="results" id="results"></div>
+
+<!-- MODAL -->
+<div class="modal-back" id="modal">
+  <div class="modal">
+    <div class="modal-head"><h2>Add items</h2><button class="modal-close" id="modal-close">✕</button></div>
+    <div class="tabs">
+      <button class="tab on" id="tab-bc">📊 Barcode <span style="font-size:11px;background:#BA7517;color:#fff;border-radius:99px;padding:1px 6px;margin-left:3px">preferred</span></button>
+      <button class="tab" id="tab-ph">📷 Photo</button>
+    </div>
+    <div id="bc-mode">
+      <div class="notice">💡 <span><strong>Barcode gives the most accurate results.</strong> Point camera at any packaged product's barcode. No barcode? Switch to Photo.</span></div>
+      <div class="vwrap" id="vwrap" style="display:none"><video id="bc-video" autoplay playsinline muted></video><div class="scanline"></div></div>
+      <div id="bc-status"></div>
+      <div id="bc-list" style="display:none">
+        <div class="sc-lbl">Scanned items — tap to toggle</div>
+        <div class="scan-items" id="bc-items"></div>
+        <button class="more-btn" id="bc-more">+ Scan another item</button>
+      </div>
+      <div class="mact" id="bc-act" style="display:none">
+        <button id="bc-cancel">Cancel</button>
+        <button class="ok" id="bc-ok">✓ Add to pantry</button>
+      </div>
+    </div>
+    <div id="ph-mode" style="display:none">
+      <div class="notice">💡 <span><strong>No barcode?</strong> Photo your fridge, counter or pantry shelf — AI sorts items automatically.</span></div>
+      <div class="upzone" id="upzone"><div class="ico">📤</div><p>Tap to take a photo or upload from camera roll</p><input type="file" id="ph-input" accept="image/*" capture="environment" style="display:none"/></div>
+      <img id="prev-img" class="prev-img" style="display:none" alt="preview"/>
+      <div id="ph-status"></div>
+      <div id="ph-results" style="display:none">
+        <div id="ph-content"></div>
+        <div class="mact">
+          <button id="ph-cancel">Cancel</button>
+          <button class="ok" id="ph-ok">✓ Add selected items</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/@zxing/browser@0.1.4/umd/index.min.js"></script>
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────
+const SPICES=['Salt','Black pepper','Garlic powder','Cumin','Paprika','Turmeric','Coriander','Cinnamon','Chili flakes','Oregano','Thyme','Ginger','Cayenne','Curry powder','Sumac',"Za'atar",'Cardamom','Allspice','Bay leaves','Smoked paprika','Cloves','Star anise','Fish sauce','Miso','Harissa'];
+const SD_SP=['Salt','Black pepper','Garlic powder','Cumin','Paprika','Oregano','Thyme'];
+const OILS=['Olive oil','Extra virgin olive oil','Vegetable oil','Canola oil','Coconut oil','Sesame oil','Avocado oil','Peanut oil','Sunflower oil','Ghee','Butter','Lard','Tallow','Grapeseed oil','Walnut oil','Chili oil'];
+const SD_OI=['Olive oil','Butter'];
+const SAUCES=['Soy sauce','Oyster sauce','Hoisin sauce','Worcestershire sauce','Hot sauce','Sriracha','Ketchup','Mustard','Mayonnaise','Tahini','Pesto','Tomato sauce','Coconut milk','Teriyaki sauce','Harissa paste','Chimichurri','Tzatziki','BBQ sauce','Sweet chili sauce','Ponzu','Gochujang','XO sauce'];
+const SD_SA=['Soy sauce','Ketchup','Mustard','Mayonnaise','Hot sauce'];
+const PANTRY=['Plain flour','Self-raising flour','Sugar','Brown sugar','Honey','Maple syrup','Vinegar','Cornstarch','Baking powder','Baking soda','Breadcrumbs','Oats','Canned tomatoes','Chicken stock','Vegetable stock','Dried pasta','Rice','Lentils','Canned chickpeas','Coconut milk','Panko','Powdered sugar'];
+const SD_PA=['Plain flour','Sugar','Honey','Vinegar','Cornstarch','Canned tomatoes','Chicken stock','Rice','Dried pasta'];
+const BASE_APPS=[{id:'stovetop',label:'Stovetop'},{id:'oven',label:'Oven'}];
+const SK='bs_v4';
+
+// Perishable subcategory keys
+const PER_CATS=['proteins','veggies','fruits','eggs-dairy','carbs'];
+
+// ── STATE ─────────────────────────────────────────────────────────────
+let ing=[],sp=[],oi=[],sa=[],pa=[],xApp=[];
+// per is now an object keyed by subcategory
+let per={proteins:[],veggies:[],fruits:[],'eggs-dairy':[],carbs:[]};
+let appOn={stovetop:true,oven:true};
+let storeRun=0,svTimer=null;
+let phDet=[],phChk=new Set(),bcIt=[],bcChk=new Set();
+let cr=null,bcStr=null;
+
+// ── STORAGE ───────────────────────────────────────────────────────────
+function load(){
+  try{
+    const r=localStorage.getItem(SK);
+    if(r){
+      const d=JSON.parse(r);
+      ing=d.ing||[];sp=d.sp||[];oi=d.oi||[];sa=d.sa||[];pa=d.pa||[];
+      appOn=d.appOn||{stovetop:true,oven:true};xApp=d.xApp||[];
+      // Support old flat per array by migrating to proteins
+      if(Array.isArray(d.per)){
+        per={proteins:d.per,veggies:[],fruits:[],'eggs-dairy':[],carbs:[]};
+      } else {
+        per=d.per||{proteins:[],veggies:[],fruits:[],'eggs-dairy':[],carbs:[]};
+      }
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+function save(){
+  try{localStorage.setItem(SK,JSON.stringify({ing,sp,oi,sa,pa,appOn,xApp,per}));flash();}catch(e){}
+}
+function sched(){clearTimeout(svTimer);svTimer=setTimeout(save,600);}
+function flash(){
+  const el=document.getElementById('sv');
+  el.textContent='✅ Saved!';
+  setTimeout(()=>el.textContent='💾 Pantry saved',1800);
+}
+function defs(){
+  SD_SP.forEach(x=>{if(!sp.includes(x))sp.push(x);});
+  SD_OI.forEach(x=>{if(!oi.includes(x))oi.push(x);});
+  SD_SA.forEach(x=>{if(!sa.includes(x))sa.push(x);});
+  SD_PA.forEach(x=>{if(!pa.includes(x))pa.push(x);});
+}
+
+// ── SHELVES ───────────────────────────────────────────────────────────
+function rShelf(id,items,list,cls,onChange){
+  const el=document.getElementById(id);
+  el.innerHTML=items.map(s=>{
+    const on=list.includes(s);
+    return`<button class="chip ${cls}${on?' on':''}" data-v="${s}">${on?'✓ ':''}${s}</button>`;
+  }).join('');
+  el.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{
+    const n=b.dataset.v,i=list.indexOf(n);
+    if(i>-1)list.splice(i,1);else list.push(n);
+    onChange();sched();
+  }));
+}
+function rSp(){rShelf('sp-shelf',SPICES,sp,'csp',()=>{rSp();rTags('sp-tags',sp,'ts',mkRem(sp,rSp,'sp-tags','ts'));});}
+function rOi(){rShelf('oi-shelf',OILS,oi,'coi',()=>{rOi();rTags('oi-tags',oi,'to',mkRem(oi,rOi,'oi-tags','to'));});}
+function rSa(){rShelf('sa-shelf',SAUCES,sa,'csa',()=>{rSa();rTags('sa-tags',sa,'tsa',mkRem(sa,rSa,'sa-tags','tsa'));});}
+function rPa(){rShelf('pan-shelf',PANTRY,pa,'cpa',()=>{rPa();rTags('pan-tags',pa,'tp',mkRem(pa,rPa,'pan-tags','tp'));});}
+
+// ── TAGS ──────────────────────────────────────────────────────────────
+function mkRem(list,sfn,tid,tcls){
+  return function rem(n){
+    const i=list.indexOf(n);if(i>-1)list.splice(i,1);
+    if(sfn)sfn();
+    rTags(tid,list,tcls,rem);sched();
+  };
+}
+function rTags(id,list,cls,rem){
+  const el=document.getElementById(id);
+  const ph={'sp-tags':'Tap above or add your own','oi-tags':'Tap above or add your own','sa-tags':'Tap above or add your own','pan-tags':'Tap above or add your own','ing-tags':'Nothing added yet','app-tags':'No extra appliances yet'};
+  if(!list.length){el.innerHTML=`<span style="font-size:12px;color:#999">${ph[id]||''}</span>`;return;}
+  el.innerHTML=list.map(n=>`<div class="tag ${cls}">${n}<button data-n="${n}">✕</button></div>`).join('');
+  el.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>rem(b.dataset.n)));
+}
+function mkAdd(iid,list,sfn,tid,tcls){
+  return()=>{
+    const inp=document.getElementById(iid),v=inp.value.trim();
+    if(!v)return;
+    v.split(',').map(s=>s.trim()).filter(Boolean).forEach(s=>{
+      const c=s[0].toUpperCase()+s.slice(1);
+      if(!list.includes(c))list.push(c);
+    });
+    inp.value='';
+    if(sfn)sfn();
+    rTags(tid,list,tcls,mkRem(list,sfn,tid,tcls));
+    sched();
+  };
+}
+function rAllTags(){
+  rTags('sp-tags',sp,'ts',mkRem(sp,rSp,'sp-tags','ts'));
+  rTags('oi-tags',oi,'to',mkRem(oi,rOi,'oi-tags','to'));
+  rTags('sa-tags',sa,'tsa',mkRem(sa,rSa,'sa-tags','tsa'));
+  rTags('pan-tags',pa,'tp',mkRem(pa,rPa,'pan-tags','tp'));
+}
+
+// ── PERISHABLES (subcategories) ───────────────────────────────────────
+function urgL(u){
+  if(u==='today')return['Use today','ut'];
+  if(u==='soon')return['Use soon','us'];
+  return['This week','uw'];
+}
+
+function rPerCat(cat){
+  const el=document.getElementById('per-list-'+cat);
+  const list=per[cat];
+  if(!list||!list.length){el.innerHTML='<p class="no-per">None added</p>';return;}
+  const ord={today:0,soon:1,week:2};
+  el.innerHTML=list.slice().map((p,i)=>({...p,i})).sort((a,b)=>ord[a.u]-ord[b.u]).map(p=>{
+    const[l,c]=urgL(p.u);
+    return`<div class="per-item"><span class="per-name">${p.n}</span><span class="per-badge ${c}">${l}</span><button class="per-rm" data-cat="${cat}" data-i="${p.i}">✕</button></div>`;
+  }).join('');
+  el.querySelectorAll('.per-rm').forEach(b=>b.addEventListener('click',()=>{
+    const item=b.closest('.per-item');
+    item.classList.add('removing');
+    item.addEventListener('animationend',()=>{
+      per[b.dataset.cat].splice(parseInt(b.dataset.i),1);
+      rPerCat(b.dataset.cat);
+    },{once:true});
+  }));
+}
+
+function rPer(){
+  PER_CATS.forEach(cat=>rPerCat(cat));
+}
+
+function addPerCat(cat){
+  const inp=document.getElementById('per-inp-'+cat);
+  // Find the urgency select in the same irow
+  const irow=inp.closest('.irow');
+  const urgSel=irow.querySelector('.per-urg-sel');
+  const u=urgSel.value;
+  const v=inp.value.trim();
+  if(!v)return;
+  v.split(',').map(s=>s.trim()).filter(Boolean).forEach(s=>{
+    const c=s[0].toUpperCase()+s.slice(1);
+    if(!per[cat].find(p=>p.n===c))per[cat].push({n:c,u});
+  });
+  inp.value='';
+  rPerCat(cat);
+}
+
+// Wire up perishable add buttons
+document.querySelectorAll('.per-add-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>addPerCat(btn.dataset.cat));
+});
+// Enter key for perishable inputs
+PER_CATS.forEach(cat=>{
+  document.getElementById('per-inp-'+cat).addEventListener('keydown',e=>{if(e.key==='Enter')addPerCat(cat);});
+});
+
+// ── APPLIANCES ────────────────────────────────────────────────────────
+function rApps(){
+  const g=document.getElementById('app-grid');
+  g.innerHTML=BASE_APPS.map(a=>`<button class="app-tog ${appOn[a.id]!==false?'on':'off'}" data-id="${a.id}">${appOn[a.id]!==false?'✓':''} ${a.label}${appOn[a.id]===false?' (off)':''}</button>`).join('');
+  g.querySelectorAll('.app-tog').forEach(b=>b.addEventListener('click',()=>{
+    appOn[b.dataset.id]=appOn[b.dataset.id]===false?true:false;
+    rApps();sched();
+  }));
+}
+function addApp(){
+  const inp=document.getElementById('app-inp'),v=inp.value.trim();
+  if(!v)return;
+  v.split(',').map(s=>s.trim()).filter(Boolean).forEach(s=>{
+    const c=s[0].toUpperCase()+s.slice(1);
+    if(!xApp.includes(c))xApp.push(c);
+  });
+  inp.value='';
+  rTags('app-tags',xApp,'ta',n=>{xApp.splice(xApp.indexOf(n),1);rTags('app-tags',xApp,'ta',()=>{});sched();});
+  sched();
+}
+
+// ── STORE RUN ─────────────────────────────────────────────────────────
+function setSR(v){
+  storeRun=v;
+  document.querySelectorAll('.sr-btn').forEach(b=>b.classList.toggle('on',parseInt(b.dataset.v)===v));
+}
+
+// ── CLEAR ─────────────────────────────────────────────────────────────
+function clearAll(){
+  if(!confirm('Clear your saved pantry? This cannot be undone.'))return;
+  ing=[];sp=[];oi=[];sa=[];pa=[];appOn={stovetop:true,oven:true};xApp=[];
+  per={proteins:[],veggies:[],fruits:[],'eggs-dairy':[],carbs:[]};
+  try{localStorage.removeItem(SK);}catch(e){}
+  rSp();rOi();rSa();rPa();rAllTags();rApps();rPer();
+  rTags('app-tags',xApp,'ta',()=>{});
+  document.getElementById('sv').textContent='🗑 Cleared';
+}
+
+// ── SCAN MODAL ────────────────────────────────────────────────────────
+const catCls={perishable:'si-pe',ingredient:'si-in',spice:'si-sp',oil:'si-oi',sauce:'si-sa',pantry:'si-pa'};
+
+function openM(m){document.getElementById('modal').classList.add('open');setM(m);}
+function closeM(){document.getElementById('modal').classList.remove('open');stopCam();resetBC();resetPh();}
+function setM(m){
+  document.getElementById('bc-mode').style.display=m==='bc'?'block':'none';
+  document.getElementById('ph-mode').style.display=m==='ph'?'block':'none';
+  document.getElementById('tab-bc').classList.toggle('on',m==='bc');
+  document.getElementById('tab-ph').classList.toggle('on',m==='ph');
+  if(m==='bc')startBC();else stopCam();
+}
+
+// Barcode
+function resetBC(){
+  bcIt=[];bcChk=new Set();
+  document.getElementById('bc-status').innerHTML='';
+  document.getElementById('bc-list').style.display='none';
+  document.getElementById('bc-act').style.display='none';
+  document.getElementById('vwrap').style.display='none';
+}
+async function startBC(){
+  stopCam();
+  document.getElementById('vwrap').style.display='block';
+  document.getElementById('bc-status').innerHTML='<div class="sc-load">Starting camera<span class="dots"></span></div>';
+  try{
+    bcStr=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+    const v=document.getElementById('bc-video');
+    v.srcObject=bcStr;await v.play();
+    document.getElementById('bc-status').innerHTML='<div style="font-size:12px;color:#888;text-align:center;padding:4px">Point camera at a barcode</div>';
+    if(window.ZXingBrowser){
+      cr=new ZXingBrowser.BrowserMultiFormatReader();
+      cr.decodeFromVideoElement(v,(r)=>{if(r)handleBC(r.getText());});
+    }
+  }catch(e){
+    document.getElementById('vwrap').style.display='none';
+    document.getElementById('bc-status').innerHTML='<div class="err">Camera access denied. Please allow camera access and try again.</div>';
+  }
+}
+function stopCam(){
+  if(cr){try{cr.reset();}catch(e){}cr=null;}
+  if(bcStr){bcStr.getTracks().forEach(t=>t.stop());bcStr=null;}
+}
+async function handleBC(code){
+  stopCam();
+  document.getElementById('vwrap').style.display='none';
+  document.getElementById('bc-status').innerHTML='<div class="sc-load">Looking up product<span class="dots"></span></div>';
+  try{
+    const r=await fetch(`https://world.openfoodfacts.org/api/v0/product/${code}.json`);
+    const d=await r.json();
+    if(d.status===1&&d.product){
+      const p=d.product;
+      await classBC(p.product_name||'Unknown',p.brands||'',(p.categories||'').toLowerCase());
+    }else{
+      document.getElementById('bc-status').innerHTML='<div style="font-size:12px;color:#888;text-align:center;padding:8px">Product not found — try Photo mode</div>';
+      setTimeout(()=>startBC(),2000);
+    }
+  }catch(e){
+    document.getElementById('bc-status').innerHTML='<div class="err">Lookup failed. Check your connection.</div>';
+  }
+}
+async function classBC(name,brand,cats){
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:150,messages:[{role:'user',content:`Classify food product for Big Spice app. Name:"${name}" Brand:"${brand}" Categories:"${cats}". Use one category: proteins (meat/fish/tofu), veggies, fruits, eggs-dairy, carbs (bread/pasta/fresh dough), spice, sauce, oil, pantry. Give clean short name. JSON only: {"name":"","category":"","brand":"${brand}"}`}]})});
+    const d=await r.json();
+    const t=d.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+    const p=JSON.parse(t);
+    const i=bcIt.length;bcIt.push(p);bcChk.add(i);rBCItems();
+  }catch(e){
+    document.getElementById('bc-status').innerHTML='<div class="err">Classification failed. Please try again.</div>';
+  }
+}
+function rBCItems(){
+  const el=document.getElementById('bc-items');
+  el.innerHTML=bcIt.map((it,i)=>`<div class="si ${catCls[it.category]||'si-in'} ${bcChk.has(i)?'ck':'uc'}" data-i="${i}">${bcChk.has(i)?'✓ ':'✕ '}${it.name}${it.brand?` · <span style="opacity:.6;font-size:11px">${it.brand}</span>`:''}</div>`).join('');
+  el.querySelectorAll('.si').forEach(el2=>el2.addEventListener('click',()=>{
+    const i=parseInt(el2.dataset.i);
+    if(bcChk.has(i)){bcChk.delete(i);el2.classList.replace('ck','uc');}
+    else{bcChk.add(i);el2.classList.replace('uc','ck');}
+    el2.childNodes[0].textContent=bcChk.has(i)?'✓ ':'✕ ';
+  }));
+  document.getElementById('bc-list').style.display='block';
+  document.getElementById('bc-act').style.display='flex';
+}
+function confirmBC(){bcIt.forEach((it,i)=>{if(bcChk.has(i))addCat(it.name[0].toUpperCase()+it.name.slice(1),it.category);});applyClose();}
+
+// Photo
+function resetPh(){
+  phDet=[];phChk=new Set();
+  document.getElementById('prev-img').style.display='none';
+  document.getElementById('upzone').style.display='block';
+  document.getElementById('ph-status').innerHTML='';
+  document.getElementById('ph-results').style.display='none';
+  document.getElementById('ph-input').value='';
+}
+document.getElementById('upzone').addEventListener('click',()=>document.getElementById('ph-input').click());
+document.getElementById('ph-input').addEventListener('change',async function(){
+  const f=this.files[0];if(!f)return;
+  const rd=new FileReader();
+  rd.onload=async e=>{
+    const b64=e.target.result.split(',')[1],mime=f.type||'image/jpeg';
+    document.getElementById('prev-img').src=e.target.result;
+    document.getElementById('prev-img').style.display='block';
+    document.getElementById('upzone').style.display='none';
+    document.getElementById('ph-status').innerHTML='<div class="sc-load">Scanning photo<span class="dots"></span></div>';
+    try{
+      const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:[{type:'image',source:{type:'base64',media_type:mime,data:b64}},{type:'text',text:'Identify all food items in this kitchen photo. For each use one category: proteins (meat/fish/tofu), veggies, fruits, eggs-dairy, carbs (bread/pasta/fresh dough), spice, sauce, oil, pantry. Only clearly identifiable items. JSON only: {"items":[{"name":"Spinach","category":"veggies"}]}'}]}]})});
+      const d=await r.json();
+      const t=d.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+      phDet=JSON.parse(t).items||[];
+      phChk=new Set(phDet.map((_,i)=>i));
+      document.getElementById('ph-status').innerHTML='';
+      rPhItems();
+    }catch(e){
+      document.getElementById('ph-status').innerHTML='<div class="err">Scan failed. Try a clearer photo.</div>';
+    }
+  };
+  rd.readAsDataURL(f);
+});
+function rPhItems(){
+  const el=document.getElementById('ph-content');
+  const cats={proteins:'Proteins',veggies:'Veggies',fruits:'Fruits','eggs-dairy':'Eggs & Dairy',carbs:'Carbs',spice:'Spices',sauce:'Sauces',oil:'Oils & fats',pantry:'Pantry'};
+  const perCats=new Set(['proteins','veggies','fruits','eggs-dairy','carbs']);
+  if(!phDet.length){el.innerHTML='<p style="font-size:12px;color:#999;text-align:center;padding:1rem">No items detected. Try a clearer, better-lit photo.</p>';document.getElementById('ph-results').style.display='block';return;}
+  const g={};phDet.forEach((it,i)=>{if(!g[it.category])g[it.category]=[];g[it.category].push({...it,i});});
+  el.innerHTML=Object.keys(cats).filter(k=>g[k]).map(k=>`<div><div class="sc-lbl">${cats[k]}</div><div class="scan-items">${g[k].map(it=>`<div class="si ${perCats.has(k)?'si-pe':catCls[k]||'si-in'} ${phChk.has(it.i)?'ck':'uc'}" data-i="${it.i}">${phChk.has(it.i)?'✓ ':'✕ '}${it.name}</div>`).join('')}</div></div>`).join('');
+  el.querySelectorAll('.si').forEach(e2=>e2.addEventListener('click',()=>{
+    const i=parseInt(e2.dataset.i);
+    if(phChk.has(i)){phChk.delete(i);e2.classList.replace('ck','uc');}
+    else{phChk.add(i);e2.classList.replace('uc','ck');}
+    e2.childNodes[0].textContent=phChk.has(i)?'✓ ':'✕ ';
+  }));
+  document.getElementById('ph-results').style.display='block';
+}
+function confirmPh(){phDet.forEach((it,i)=>{if(phChk.has(i))addCat(it.name[0].toUpperCase()+it.name.slice(1),it.category);});applyClose();}
+
+const PER_SUB=new Set(['proteins','veggies','fruits','eggs-dairy','carbs']);
+function addCat(name,cat){
+  if(PER_SUB.has(cat)){
+    if(!per[cat].find(p=>p.n===name))per[cat].push({n:name,u:'soon'});
+  } else ({
+    spice:()=>{if(!sp.includes(name))sp.push(name);},
+    oil:()=>{if(!oi.includes(name))oi.push(name);},
+    sauce:()=>{if(!sa.includes(name))sa.push(name);},
+    pantry:()=>{if(!pa.includes(name))pa.push(name);}
+  }[cat]||(() => { if(!pa.includes(name)) pa.push(name); }))();
+}
+function applyClose(){rPer();rSp();rOi();rSa();rPa();rAllTags();sched();closeM();}
+
+// ── MEAL GENERATION ───────────────────────────────────────────────────
+async function getMeals(){
+  const allPer=PER_CATS.flatMap(cat=>per[cat]);
+  const empty=!sp.length&&!oi.length&&!sa.length&&!pa.length&&!allPer.length;
+  if(empty){document.getElementById('results').innerHTML='<div class="empty">Add some ingredients or spices to get started!</div>';return;}
+  const btn=document.getElementById('find-btn');
+  btn.classList.add('loading');btn.disabled=true;
+  const mt=document.getElementById('meal-type').value,dt=document.getElementById('diet').value;
+  const re=document.getElementById('results');
+  re.innerHTML=`<div class="loading">${storeRun>0?`Finding recipes within ${storeRun} extra item${storeRun>1?'s':''}...`:'Simmering your ideas...'}<span class="dots"></span></div>`;
+  const ps=allPer.length?allPer.map(p=>`${p.n} (${p.u==='today'?'must use today':p.u==='soon'?'use in 2-3 days':'use this week'})`).join(', '):'none';
+  const apps=[...(appOn.stovetop!==false?['Stovetop']:[]),...(appOn.oven!==false?['Oven']:[]),...xApp];
+  const srI=storeRun===0
+    ?'Only use what user has. Set grab_these to [].'
+    :`User can buy up to ${storeRun} extra item${storeRun>1?'s':''}. Suggest recipes needing at most ${storeRun} more. List those items in both "needs" AND "grab_these".`;
+  const prompt=`You are a world cuisine expert and home chef using the Big Spice app.
+Perishables (PRIORITIZE — use these first): ${ps}.
+Pantry staples: ${pa.length?pa.join(', '):'none'}.
+Spices: ${sp.length?sp.join(', '):'none'}.
+Sauces & condiments: ${sa.length?sa.join(', '):'none'}.
+Oils & fats: ${oi.length?oi.join(', '):'none'}.
+Available appliances: ${apps.join(', ')}.
+Meal type: ${mt}. Diet: ${dt}.
+${srI}
+Only suggest recipes achievable with the listed appliances. A Vitamix or blender enables soups and smoothies. No oven means no baking or roasting. Spices, sauces and fats define the cultural identity of a dish. Prioritize perishables.
+Suggest exactly 3 meal ideas. Respond ONLY with valid JSON (no markdown, no backticks):
+{"meals":[{"name":"","cuisine":"","time":"","difficulty":"","description":"","spices_used":[],"sauces_used":[],"oils_used":[],"pantry_used":[],"ingredients_used":[],"perishables_used":[],"appliances_used":[],"needs":[],"grab_these":[]}]}`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1400,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    const t=d.content.map(b=>b.text||'').join('').replace(/```json|```/g,'').trim();
+    renderMeals(JSON.parse(t).meals);
+  }catch(e){
+    re.innerHTML='<div class="err">Something went wrong. Please try again.</div>';
+  } finally {
+    btn.classList.remove('loading');btn.disabled=false;
+  }
+}
+
+function renderMeals(meals){
+  const el=document.getElementById('results');
+  if(!meals||!meals.length){el.innerHTML='<div class="empty">No ideas found — try adjusting your store run or adding more items.</div>';return;}
+  el.innerHTML='<hr class="divider">'+meals.map((m,idx)=>{
+    const hasP=m.perishables_used&&m.perishables_used.length>0;
+    const hasG=m.grab_these&&m.grab_these.length>0;
+    return`<div class="card ${hasP?'perish':''}" style="animation-delay:${idx*0.12}s">
+      ${hasP?'<div class="pb">⚠️ Uses perishables</div><br>':''}
+      <div class="ctag">🌍 ${m.cuisine}</div>
+      <h3>${m.name}</h3>
+      <div class="card-meta">⏱ ${m.time} &nbsp;·&nbsp; ${m.difficulty}</div>
+      <div class="card-desc">${m.description}</div>
+      <div class="badges">
+        ${(m.perishables_used||[]).map(x=>`<span class="b bpe">⏰ ${x}</span>`).join('')}
+        ${(m.spices_used||[]).map(x=>`<span class="b bsp">🌶 ${x}</span>`).join('')}
+        ${(m.sauces_used||[]).map(x=>`<span class="b bsa">🥣 ${x}</span>`).join('')}
+        ${(m.oils_used||[]).map(x=>`<span class="b bo">🫙 ${x}</span>`).join('')}
+        ${(m.pantry_used||[]).map(x=>`<span class="b bp">📦 ${x}</span>`).join('')}
+        ${(m.ingredients_used||[]).map(x=>`<span class="b bi">${x}</span>`).join('')}
+        ${(m.appliances_used||[]).map(x=>`<span class="b bap">🔌 ${x}</span>`).join('')}
+      </div>
+      ${hasG?`<div class="grab-sec"><div class="grab-lbl">🛒 Grab from the store:</div><div class="badges">${(m.grab_these||[]).map(x=>`<span class="b bgr">+ ${x}</span>`).join('')}</div></div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────
+const stored=load();
+if(!stored)defs();
+rSp();rOi();rSa();rPa();rAllTags();rApps();rPer();
+rTags('app-tags',xApp,'ta',n=>{xApp.splice(xApp.indexOf(n),1);rTags('app-tags',xApp,'ta',()=>{});sched();});
+setSR(0);
+
+const aSp=mkAdd('sp-inp',sp,rSp,'sp-tags','ts');
+const aOi=mkAdd('oi-inp',oi,rOi,'oi-tags','to');
+const aSa=mkAdd('sa-inp',sa,rSa,'sa-tags','tsa');
+const aPa=mkAdd('pan-inp',pa,rPa,'pan-tags','tp');
+
+// Button listeners
+document.getElementById('bc-btn').addEventListener('click',()=>openM('bc'));
+document.getElementById('ph-btn').addEventListener('click',()=>openM('ph'));
+document.getElementById('modal-close').addEventListener('click',closeM);
+document.getElementById('tab-bc').addEventListener('click',()=>setM('bc'));
+document.getElementById('tab-ph').addEventListener('click',()=>setM('ph'));
+document.getElementById('bc-more').addEventListener('click',()=>{document.getElementById('bc-status').innerHTML='';startBC();});
+document.getElementById('bc-cancel').addEventListener('click',closeM);
+document.getElementById('bc-ok').addEventListener('click',confirmBC);
+document.getElementById('ph-cancel').addEventListener('click',closeM);
+document.getElementById('ph-ok').addEventListener('click',confirmPh);
+document.getElementById('sp-add').addEventListener('click',aSp);
+document.getElementById('oi-add').addEventListener('click',aOi);
+document.getElementById('sa-add').addEventListener('click',aSa);
+document.getElementById('pan-add').addEventListener('click',aPa);
+document.getElementById('app-add').addEventListener('click',addApp);
+document.getElementById('find-btn').addEventListener('click',getMeals);
+document.getElementById('clear-btn').addEventListener('click',clearAll);
+document.querySelectorAll('.sr-btn').forEach(b=>b.addEventListener('click',()=>setSR(parseInt(b.dataset.v))));
+
+// Enter key support
+[['sp-inp',aSp],['oi-inp',aOi],['sa-inp',aSa],['pan-inp',aPa],['app-inp',addApp]]
+  .forEach(([id,fn])=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')fn();}));
+</script>
+</body>
+</html>
